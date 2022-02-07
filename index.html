@@ -5,6 +5,7 @@
 <form method="post" action="loadcsv.php" enctype="multipart/form-data">
     <div>
         <label for="file">Choose CSV-file</label>
+        <input type="hidden" name="MAX_FILE_SIZE" value="10240" />
         <input accept=".csv" type="file" id="file" name="filename" multiple>
     </div>
     <div>

@@ -7,15 +7,15 @@ header("Content-Transfer-Encoding: UTF-8");
 if ($_FILES && $_FILES["filename"]["error"] == UPLOAD_ERR_OK) {
     $name = "files/" . $_FILES["filename"]["name"];
     move_uploaded_file($_FILES["filename"]["tmp_name"], $name);
-    define("n", 1000); //split the query over n rows
+    define("n", 10000); //split the query over n rows
     $rows = 0;
     $outputData = array();
-    array_push($outputData, array('Код', 'Название', 'Error'));
-
+    array_push($outputData, array('Код', 'Название', 'Error')); // Filling the table header
     require('connect.php');
     try {
         $dbh = new PDO("mysql:host=$host;dbname=$database;charset=utf8", $user, $password);
         $queryReplace = 'REPLACE INTO handbook (id, name) VALUES ';
+
         if (($handle = fopen($name, "r")) !== FALSE) {
             while (($data = fgetcsv($handle, 2000, ",")) !== FALSE) {
                 $num = count($data);
@@ -40,11 +40,9 @@ if ($_FILES && $_FILES["filename"]["error"] == UPLOAD_ERR_OK) {
                         }
                     }
 
-
                     array_push($string, $data[$c - 1], $data[$c], $say);
                     array_push($outputData, $string);
                     unset($string);
-
                 }
             }
             if ($rows <> 0) {
@@ -52,7 +50,6 @@ if ($_FILES && $_FILES["filename"]["error"] == UPLOAD_ERR_OK) {
                 $dbh->query($str);
             }
             fclose($handle);
-
         }
         $dbh = null;
 
@@ -68,4 +65,4 @@ if ($_FILES && $_FILES["filename"]["error"] == UPLOAD_ERR_OK) {
         print "Error!: " . $e->getMessage() . "<br/>";
         die();
     }
-} else echo "Erorr: file not selected";
+} else echo "Erorr #{$_FILES['fiilename']['error']}";
