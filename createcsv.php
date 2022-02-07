@@ -2,12 +2,13 @@
 header('Content-Type: text/html; charset=utf-8');
 
 $myList = array();
-$countFields = 130000;
-echo $countFields . iconv("windows-1251", "UTF-8", " ñòğîê áûëî çàãğóæåíî<br>");
+$countFields = 150000;
+echo $countFields . " rows created<br>";
 
 function genName()
 {
-    $chars = '¨ÉÖÓÊÅÍÃØÙÇÕÚİÆÄËÎĞÏÀÂÛÔß×ÑÌÈÒÜÁŞ¸éöóêåíãøùçõúôûâàïğîëäæıÿ÷ñìèòüáşABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-.';
+    setlocale(LC_ALL, "ru_RU.UTF-8");
+    $chars = iconv("UTF-8","windows-1251","ĞĞ‘Ğ’Ğ“Ğ”Ğ•ĞĞ–Ğ—Ğ˜Ğ™ĞšĞ›ĞœĞĞĞŸĞ Ğ¡Ğ¢Ğ£Ğ¤Ğ¥Ğ¦Ğ§Ğ¨Ğ©ĞªĞ«Ğ¬Ğ­Ğ®Ğ¯Ğ°Ğ±Ğ²Ğ³Ğ´ĞµÑ‘Ğ¶Ğ·Ğ¸Ğ¹ĞºĞ»Ğ¼Ğ½Ğ¾Ğ¿Ñ€ÑÑ‚ÑƒÑ„Ñ…Ñ†Ñ‡ÑˆÑ‰ÑŠÑ‹ÑŒÑÑÑABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-.");
     $numChars = strlen($chars);
     $length = 15;
     $string = '';
@@ -20,6 +21,7 @@ function genName()
     }
 
     return iconv("windows-1251", "UTF-8", $string);
+    //return $string;
 }
 
 function interfere()
