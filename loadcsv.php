@@ -1,5 +1,4 @@
 <?php
-//header('Content-Type: text/html; charset=utf-8');
 header('Content-type: application/csv');
 $time = date("Ymd_His");
 header("Content-Disposition: attachment; filename=report_$time.csv");
@@ -17,37 +16,37 @@ if ($_FILES && $_FILES["filename"]["error"] == UPLOAD_ERR_OK) {
         $queryReplace = 'REPLACE INTO handbook (id, name) VALUES ';
 
         if (($handle = fopen($name, "r")) !== FALSE) {
-            while (($data = fgetcsv($handle, 2000, ",")) !== FALSE) {
+            while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
                 $num = count($data);
-                $string = array();
                 for ($c = 0; $c < $num; $c++) {
                     if (($c % 2) == 0) continue;
+                    if ($data[$c] == 'Код' || $data[$c] == 'Название') continue; // skip table header
 
-                    setlocale(LC_ALL, "ru_RU.UTF-8");
-                    $say = '';
+                    $say = null;
                     if (preg_match("/[^а-яёa-z0-9.-]/iu", $data[$c], $matches)) {
                         $say = 'Недопустимый символ "' . $matches[0] . '" в поле Название';
                     } else {
-                        $rows++;
-                        $queryReplace .= "('" . $data[$c - 1] . "', '" . $data[$c] . "')";
-
-                        if ($rows == n) {
-                            $dbh->query($queryReplace);
-                            $rows = 0;
-                            $queryReplace = 'REPLACE INTO handbook (id, name) VALUES ';
+                        if (preg_match("/[^0-9]/", $data[$c - 1], $matches)) {
+                            $say = 'Недопустимый символ "' . $matches[0] . '" в поле Код';
                         } else {
-                            $queryReplace .= ", ";
+                            $rows++;
+                            $queryReplace .= "('" . $data[$c - 1] . "', '" . $data[$c] . "')";
+
+                            if ($rows == n) {
+                                $dbh->query($queryReplace);
+                                $rows = 0;
+                                $queryReplace = 'REPLACE INTO handbook (id, name) VALUES ';
+                            } else {
+                                $queryReplace .= ", ";
+                            }
                         }
                     }
-
-                    array_push($string, $data[$c - 1], $data[$c], $say);
-                    array_push($outputData, $string);
-                    unset($string);
+                    array_push($outputData, array($data[$c - 1], $data[$c], $say));
                 }
             }
             if ($rows <> 0) {
-                $str = substr($queryReplace, 0, -2);
-                $dbh->query($str);
+                $tail = substr($queryReplace, 0, -2); // delete extra characters ", " from query
+                $dbh->query($tail);
             }
             fclose($handle);
         }
