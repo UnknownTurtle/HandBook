@@ -1,9 +1,9 @@
 # How to use:
 
-1. Run _createcsv.php_ for generate random names
+1. Run _createcsv.php_ for generate random names. 
 You don't have to use this script if you already have the .csv file. 
-The file will be uploaded to the root directoryю
-> You can set custom value by using createcsv.php?count=**your_value**
+The file will be uploaded to the root directory.
+> You can set custom value by using _createcsv.php?count=**your_value**_
 2. Open _index.html_ and choose CSV-file.
 3. Get a report on loaded strings by means of auto download. 
 Rows with wrong characters contained in the name or code field will not be loaded into the table. 
